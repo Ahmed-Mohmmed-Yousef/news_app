@@ -1,6 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:news_app/module/web_view/web_view_screen.dart';
 
 Widget newsItem(BuildContext context, Map map) {
   final String title = map['title'];
@@ -66,21 +67,30 @@ Widget divider() {
   );
 }
 
-Widget articleBuilder({required List list}) {
-  return ConditionalBuilder(
-    condition: list.isNotEmpty,
-    fallback: (context) => const Center(
-        child: CircularProgressIndicator(
-      semanticsLabel: 'LODING...',
-    )),
-    builder: (cxt) => ListView.separated(
-      itemCount: list.length,
-      itemBuilder: (context, index) => newsItem(context, list[index]),
-      separatorBuilder: (context, index) => divider(),
+Widget articleBuilder({required list}) {
+  // return ConditionalBuilder(
+  //   condition: true,
+  //   fallback: (context) => const Center(
+  //       child: CircularProgressIndicator(
+  //     semanticsLabel: 'LODING...',
+  //   )),
+  //   builder: (cxt) => ListView.separated(
+  //     itemCount: list.length,
+  //     itemBuilder: (context, index) => newsItem(context, list[index]),
+  //     separatorBuilder: (context, index) => divider(),
+  //   ),
+  // );
+  return ListView.separated(
+    itemCount: list.length,
+    itemBuilder: (context, index) => InkWell(
+      child: newsItem(context, list[index]),
+      onTap: () {
+        navigateTo(context, WebViewScreen(url: list[index]['url']));
+      },
     ),
+    separatorBuilder: (context, index) => divider(),
   );
 }
-
 
 class DefualtTextField extends StatelessWidget {
   DefualtTextField({
