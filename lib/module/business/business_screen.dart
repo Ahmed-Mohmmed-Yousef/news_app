@@ -2,7 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/shared/component/components.dart';
-import 'package:news_app/shared/cubit/news_cubit.dart';
+import 'package:news_app/shared/cubit/news/news_cubit.dart';
 
 class BusinessScreen extends StatelessWidget {
   const BusinessScreen({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class BusinessScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         NewsCubit cubit = NewsCubit.get(context);
-        return ArticleBuilder(list: cubit.business);
+        return articleBuilder(list: cubit.business);
       },
     );
   }

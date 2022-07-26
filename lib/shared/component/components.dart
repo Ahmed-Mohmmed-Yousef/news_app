@@ -18,8 +18,8 @@ Widget newsItem(BuildContext context, Map map) {
             width: 120,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              image:
-                  DecorationImage(image: CachedNetworkImageProvider(url), fit: BoxFit.cover),
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(url), fit: BoxFit.cover),
             ),
           ),
         const SizedBox(width: 10),
@@ -66,28 +66,62 @@ Widget divider() {
   );
 }
 
+Widget articleBuilder({required List list}) {
+  return ConditionalBuilder(
+    condition: list.isNotEmpty,
+    fallback: (context) => const Center(
+        child: CircularProgressIndicator(
+      semanticsLabel: 'LODING...',
+    )),
+    builder: (cxt) => ListView.separated(
+      itemCount: list.length,
+      itemBuilder: (context, index) => newsItem(context, list[index]),
+      separatorBuilder: (context, index) => divider(),
+    ),
+  );
+}
 
-class ArticleBuilder extends StatelessWidget {
-  const ArticleBuilder({
+
+class DefualtTextField extends StatelessWidget {
+  DefualtTextField({
     Key? key,
-    required this.list,
+    required this.controller,
+    required this.title,
+    required this.icon,
+    required this.validator,
+    this.readOnly = false,
+    this.onTap,
+    this.onChanged,
   }) : super(key: key);
 
-  final List<dynamic> list;
+  final TextEditingController controller;
+  final String title;
+  final IconData icon;
+  final FormFieldValidator<String>? validator;
+  final void Function()? onTap;
+  final bool readOnly;
+  void Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return ConditionalBuilder(
-      condition: list.isNotEmpty,
-      fallback: (context) => const Center(
-          child: CircularProgressIndicator(
-        semanticsLabel: 'LODING...',
-      )),
-      builder: (cxt) => ListView.separated(
-        itemCount: list.length,
-        itemBuilder: (context, index) => newsItem(context, list[index]),
-        separatorBuilder: (context, index) => divider(),
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon),
+        border: const OutlineInputBorder(),
+        label: Text(title),
       ),
+      validator: validator,
+      readOnly: readOnly,
+      onTap: onTap,
+      onChanged: onChanged,
     );
   }
 }
+
+void navigateTo(BuildContext context, Widget widget) =>
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return widget;
+      },
+    ));
