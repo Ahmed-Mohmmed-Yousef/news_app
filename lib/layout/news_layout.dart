@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/shared/cubit/app_cubit/app_cubit.dart';
 import 'package:news_app/shared/cubit/news_cubit.dart';
 import 'package:news_app/shared/network/remote/dio_helper.dart';
 
@@ -13,25 +14,32 @@ class NewsLayout extends StatelessWidget {
       child: BlocConsumer<NewsCubit, NewsState>(
         listener: (context, state) {},
         builder: (context, state) {
-          NewsCubit cubit = NewsCubit.get(context);
+          NewsCubit newsCubit = NewsCubit.get(context);
+          AppCubit appCubit = AppCubit.get(context);
           return Scaffold(
             appBar: AppBar(
               title: const Text('News App'),
+              titleSpacing: 16.0,
               actions: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.brightness_4_outlined),
+                  onPressed: () => appCubit.isLightMode = !appCubit.isLightMode,
+                ),
               ],
             ),
-            body: cubit.screens[cubit.currentIndex],
+            body: newsCubit.screens[newsCubit.currentIndex],
             bottomNavigationBar: BottomNavigationBar(
-              currentIndex: cubit.currentIndex,
-              items: cubit.bottomItems,
-              onTap: (value) => cubit.currentIndex = value,
+              currentIndex: newsCubit.currentIndex,
+              items: newsCubit.bottomItems,
+              onTap: (value) => newsCubit.currentIndex = value,
             ),
             floatingActionButton: FloatingActionButton(
               child: const Icon(Icons.newspaper),
-              onPressed: () {
-                
-              },
+              onPressed: () {},
             ),
           );
         },

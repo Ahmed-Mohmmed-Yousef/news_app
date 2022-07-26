@@ -1,11 +1,11 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-Widget newsItem(Map map) {
+Widget newsItem(BuildContext context, Map map) {
   final String title = map['title'];
   final String date = map['publishedAt'];
   final String url = map['urlToImage'] ?? "";
-  print('URL => ${url.isEmpty}');
   return Padding(
     padding: const EdgeInsets.all(16),
     child: Row(
@@ -19,12 +19,12 @@ Widget newsItem(Map map) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image:
-                  DecorationImage(image: NetworkImage(url), fit: BoxFit.cover),
+                  DecorationImage(image: CachedNetworkImageProvider(url), fit: BoxFit.cover),
             ),
           ),
         const SizedBox(width: 10),
         Expanded(
-          child: Container(
+          child: SizedBox(
             height: 120,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,10 +36,7 @@ Widget newsItem(Map map) {
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ),
                 Text(
@@ -88,7 +85,7 @@ class ArticleBuilder extends StatelessWidget {
       )),
       builder: (cxt) => ListView.separated(
         itemCount: list.length,
-        itemBuilder: (context, index) => newsItem(list[index]),
+        itemBuilder: (context, index) => newsItem(context, list[index]),
         separatorBuilder: (context, index) => divider(),
       ),
     );
